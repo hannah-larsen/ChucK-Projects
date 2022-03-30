@@ -1,8 +1,11 @@
-/* Experimenting with panning and randomization in ChucK */
+/* Experimenting with panning and randomization in ChucK 
+- see if i can randomize different osc for each note
+*/
 <<< "Panning and Randomization" >>>;
 
 // Initializing the osc
-TriOsc osc => ADSR env1 => Pan2 pan => dac;
+/* oscList = ["SinOsc", "TriOsc", "SqrOsc"]; */
+SinOsc osc => ADSR env1 => Pan2 pan => dac;
 
 // Initializing pan value
 -1.0 => pan.pan;
@@ -20,7 +23,7 @@ TriOsc osc => ADSR env1 => Pan2 pan => dac;
 int position;
 
 // Playing the music by repitition
-for(0 => int i; i < 1; i++)
+for(0 => int i; i < 4; i++)
 {
     for(-1.0 => float j; j < 1.0; 0.1 +=> j)
     {

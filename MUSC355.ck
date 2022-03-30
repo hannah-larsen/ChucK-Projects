@@ -10,6 +10,13 @@ CURRENT PROGRESS:
 
 NEXT UP:
 - Implement randomization
+    - randomize gaps in noise (lack of osc)
+    - randomize chords based off a preset bank of chords
+- Implement another osc of a different type
+    - maybe randomize types of oscs
+- Implement back track (ambient sounds) that could be triggered
+
+- PROBABILISTIC PLAYING OF SOUNDS (chain something ??? ask colin)
  */
 
 
