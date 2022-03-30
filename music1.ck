@@ -1,3 +1,4 @@
+/* Experimenting with major and minor chords using lists and loops */
 <<<"Some Major/Minor Arpeggio Stuff">>>;
 
 SinOsc osc => dac;

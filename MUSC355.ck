@@ -1,4 +1,7 @@
 /* 
+
+MAIN FILE FOR MUSC 355 COMPOSITION
+
 CURRENT PROGRESS:
 - Created basic chords using frequencies and midi notes
 - Optimized runtime by creating loops to run our musical output
@@ -13,14 +16,17 @@ NEXT UP:
 /*  This is where we define all the things for use later on in the program */
 
 // Defining our oscillators
-SinOsc osc => ADSR env1 => dac;
-SinOsc osc2 => ADSR env2 => NRev rev2 => dac;
+SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
+SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac;
 env2 => Delay delay2 => dac;
 delay2 => delay2;
 
 // Params for oscs
 0.2 => osc.gain;
 0.1 => osc2.gain;
+
+0.8 => pan1.pan;
+0.8 => pan2.pan;
 
 // Defining what 'notes' makes a major vs minor chord, send them to a list
 [0,4,7,12] @=> int major[];

@@ -1,3 +1,4 @@
+/* ChucK program that emulates the sound of a 'rainfall' using arpeggios */
 SinOsc osc => dac;
 0.5 => osc.gain;
 
