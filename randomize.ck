@@ -25,10 +25,12 @@ for(0 => int i; i < 1; i++)
     for(-1.0 => float j; j < 1.0; 0.1 +=> j)
     {
         Math.random2f(-1.0, 1.0) => float panValue; // Choosing a random value between [-0.1 and 1.0)
+        Math.random2(0, 3) * 12 => position;    // Choosing random note values to output
+        Math.random2(0, minor.cap() -1) => int note;    // Sending randomnote values to std.mtof
         panValue => pan.pan;    // The random value achieved at line above distates where sound is panned
         <<<"Pan value:", panValue >>>;  // Printing out pan values to see what value is being picked each time
-        Std.mtof(minor[0] + offset + position) => osc.freq; // Creating the chord notes based off chord type/offset/position
+        Std.mtof(minor[note] + offset + position) => osc.freq; // Creating the chord notes based off chord type/offset/position
         1 => env1.keyOn;    // Sending the sound to ADSR env
-        beat => now;    // Playing (outputting) the sound
+        beat /2 => now;    // Playing (outputting) the sound
     }
 }
