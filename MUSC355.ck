@@ -1,6 +1,6 @@
 /* 
 
-MAIN FILE FOR MUSC 355 COMPOSITION
+MUSC 355 CHUCK COMPOSITION
 
 CURRENT PROGRESS:
 - Created basic chords using frequencies and midi notes
@@ -9,14 +9,12 @@ CURRENT PROGRESS:
 - Added reverb and delay
 
 NEXT UP:
-- Implement randomization
-    - randomize gaps in noise (lack of osc)
-    - randomize chords based off a preset bank of chords
+- Implement randomization (random silences (mute), chords (based on chord bank), oscillators?)
 - Implement another osc of a different type
-    - maybe randomize types of oscs
-- Implement back track (ambient sounds) that could be triggered
-
-- PROBABILISTIC PLAYING OF SOUNDS (chain something ??? ask colin)
+- Implement back track (ambient sounds) that could be triggered - figure out how to import wav file
+- PROBABILISTIC PLAYING OF SOUNDS
+    - Markov chain: out of 100, if a number is between 50-100 (50% chance) play sound
+        - can do this for anything rly and have smaller probabilities based on how much out of 100 you put it
  */
 
 
