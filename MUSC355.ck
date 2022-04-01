@@ -79,15 +79,40 @@ fun void playTwoBars(int position, int chord[])
 
 // This loop calls the different chords to be played and the user
 // can change the starting freq position/chord type in the params
-for (1 => int x; x > 0; x--)
+/* for (1 => int x; x > 0; x--)
 {
-    playTwoBars(0, minor);
-    playTwoBars(-4, major);
-    playTwoBars(-2, major);
-    playTwoBars(5, minor);
+playTwoBars(0, minor);
+playTwoBars(-4, major);
+playTwoBars(-2, major);
+playTwoBars(5, minor);
 
-    playTwoBars(0, minor);
-    playTwoBars(3, major);
-    playTwoBars(5, minor);
-    playTwoBars(-1, major);
+playTwoBars(0, minor);
+playTwoBars(3, major);
+playTwoBars(5, minor);
+playTwoBars(-1, major);
+} */
+
+
+
+/* MARKOV CHAIN: This loop will be randomly picking values between 1-100
+    the value will lie within a range in which a probability of an event will occur
+    TLDR: at every 'iteration' a different chord will be picked */
+
+
+while (true)   // change the 5 in a < 5 to simulate more/less loops
+{
+    // Picking a random num between 1 and 100
+    Math.random2(1, 100) => int rand;
+
+    // 70% chance of a major chord
+    if (rand <= 70 && rand > 0)
+    {
+        <<<"Rand: ", rand, "Major chord picked">>>;
+    }
+
+    // 30% chance of a minor chord
+    else if (rand <= 100 && rand > 70)
+    {
+        <<<"Rand: ", rand, "Minor chord picked">>>;
+    }
 }
