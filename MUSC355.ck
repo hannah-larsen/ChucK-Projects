@@ -77,42 +77,106 @@ fun void playTwoBars(int position, int chord[])
     } 
 }
 
-// This loop calls the different chords to be played and the user
-// can change the starting freq position/chord type in the params
-/* for (1 => int x; x > 0; x--)
-{
-playTwoBars(0, minor);
-playTwoBars(-4, major);
-playTwoBars(-2, major);
-playTwoBars(5, minor);
-
-playTwoBars(0, minor);
-playTwoBars(3, major);
-playTwoBars(5, minor);
-playTwoBars(-1, major);
-} */
 
 
 
-/* MARKOV CHAIN: This loop will be randomly picking values between 1-100
-    the value will lie within a range in which a probability of an event will occur
-    TLDR: at every 'iteration' a different chord will be picked */
+/*
+MARKOV CHAIN: PROBABILITY BASED ON RAND NUMBER
 
+RAND range: 1-100
+
+MAJOR CHORD: 70% (between 1 - 69)
+MINOR CHORD: 30% (between 70 - 100)
+
+
+POSITIONS 1 - 11 covers a full octave
+RAND2 range: 1 - 90
+
+if rand > 0 && rand < 20: position 1
+if rand >= 20 && rand < 30: position 2
+if rand >= 30 && rand < 40: position 3
+if rand >= 40 && rand < 47: position 4
+if rand >= 47 && rand < 55: position 5
+
+if rand >= 55 && rand < 60: position 6
+if rand >= 60 && rand < 65: position 7
+if rand >= 65 && rand < 70: position 8
+if rand >= 70 && rand < 75: position 9
+if rand >= 75 && rand < 80: position 10
+if rand >= 80 && rand < 90: position 11
+*/
 
 while (true)   // change the 5 in a < 5 to simulate more/less loops
 {
-    // Picking a random num between 1 and 100
+    0 => int x;
+    0 => int pos;
+
+    // Picking a random num between 1 and 100: major/minor decision
     Math.random2(1, 100) => int rand;
+    // Picking a random num between 1 and 90: starting position (chord) decision
+    Math.random2(1, 90) => int rand2;
+
+
+
+    // Figuring out starting position (chord for arpeggio)
+    if (rand2 > 0 && rand2 < 20){
+        1 => pos;
+    } else if (rand2 >= 20 && rand2 < 30){
+        2 => pos;
+    } else if (rand2 >= 30 && rand2 < 40){
+        3 => pos;
+    } else if (rand2 >= 40 && rand2 < 47){
+        4 => pos;
+    } else if (rand2 >= 47 && rand2 < 55){
+        5 => pos;
+    } else if (rand2 >= 55 && rand2 < 60){
+        6 => pos;
+    } else if (rand2 >= 60 && rand2 < 65){
+        7 => pos;
+    } else if (rand2 >= 65 && rand2 < 70){
+        8 => pos;
+    } else if (rand2 >= 70 && rand2 < 75){
+        9 => pos;
+    } else if (rand2 >= 75 && rand2 < 80){
+        10 => pos;
+    } else if (rand2 >= 80 && rand2 < 90){
+        11 => pos;
+    } else {
+        12 => pos;
+    }
+
+
 
     // 70% chance of a major chord
     if (rand <= 70 && rand > 0)
     {
         <<<"Rand: ", rand, "Major chord picked">>>;
+        <<<"Rand2: ", rand2, "Position: ", pos>>>;
+        // Mess around with panning/gain
+        rand % 2 => int result;
+        if (result == 1)
+        {
+            1 => x;
+        }
+        else if (result == 2)
+        {
+            2 => x;
+        }
+
+        // Call the playTwoBars function
+        playTwoBars(pos, major);
     }
+
+
 
     // 30% chance of a minor chord
     else if (rand <= 100 && rand > 70)
     {
         <<<"Rand: ", rand, "Minor chord picked">>>;
+        <<<"Rand2: ", rand2, "Position: ", pos>>>;
+        // Call the playTwoBars function
+        playTwoBars(pos, minor);
     }
 }
+
+
