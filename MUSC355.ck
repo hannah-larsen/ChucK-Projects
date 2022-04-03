@@ -7,14 +7,13 @@ CURRENT PROGRESS:
 - Optimized runtime by creating loops to run our musical output
 - Experiemented with adding multiple oscillators
 - Added reverb and delay
+- PROBABILISTIC PLAYING OF SOUNDS
+    - Markov chain: out of 100, if a number is between 50-100 (50% chance) play sound
 
 NEXT UP:
 - Implement randomization (random silences (mute), chords (based on chord bank), oscillators?)
 - Implement another osc of a different type
 - Implement back track (ambient sounds) that could be triggered - figure out how to import wav file
-- PROBABILISTIC PLAYING OF SOUNDS
-    - Markov chain: out of 100, if a number is between 50-100 (50% chance) play sound
-        - can do this for anything rly and have smaller probabilities based on how much out of 100 you put it
  */
 
 
@@ -154,16 +153,14 @@ while (true)   // change the 5 in a < 5 to simulate more/less loops
         <<<"Rand2: ", rand2, "Position: ", pos>>>;
         // Mess around with panning/gain
         rand % 2 => int result;
-        if (result == 1)
-        {
+        if (result == 1) { 
             1 => x;
-        }
-        else if (result == 2)
-        {
+        } else if (result == 2) {
             2 => x;
         }
 
         // Call the playTwoBars function
+        // FUTURE IMPLEMENTATION: PASS X AS A PARAM AND CHANGE GAIN/PAN/OTHER ELEMENT
         playTwoBars(pos, major);
     }
 
