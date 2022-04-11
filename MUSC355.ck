@@ -9,10 +9,10 @@ CURRENT PROGRESS:
 - Added reverb and delay
 - PROBABILISTIC PLAYING OF SOUNDS
     - Markov chain: out of 100, if a number is between 50-100 (50% chance) play sound
+- RANZOMIZED BEAT CHANGES 
 
 NEXT UP:
-- Implement randomization (random silences (mute), chords (based on chord bank), oscillators?)
-- Implement another osc of a different type
+- Random mutes (gain = 0)
 - Implement back track (ambient sounds) that could be triggered - figure out how to import wav file
  */
 
@@ -48,6 +48,7 @@ int position;           // what location our chord starts on (changes pitch)
 // Params for delay
 // need to define these otherwise the chuck memory cannot
 // hold onto space in memory for the delay
+//**NEED TO MOVE THESE TO WHILE(TRUE) SO I CAN CHANGE GAIN VALS TO FADE IN/OUT SOUND AT RANDOM PROBS**
 beat => delay2.max;
 beat/4 => delay2.delay;
 0.5 => delay2.gain;
@@ -63,15 +64,27 @@ beat/4 => delay2.delay;
 // given a position for the chord to start on and a chord type (maj/min)
 fun void playTwoBars(int position, int chord[])
 {
+    
+
    for (0 => int i; i < 4; i++) // This repeats 4 times, 1 time for each note in the chord. Gives us sound for osc1
     {
         Std.mtof(chord[0] + offset + position) => osc.freq;
         1 => env1.keyOn;    // This allows us to hear the env1 ASDR
+
+        // Generating a random value that will determine duration of final note in 4-chord sequence
+        Math.random2f (1, 100) => float randNoteDur;
+
         for (0 => int j; j < 4; j++)    // This for loop gives us sound for our osc2
         {
             Std.mtof(chord[j] + offset + position + 12) => osc2.freq;   // Moving it up by 12 because thats 1 octave to sound diff
             1 => env2.keyOn;
-            beat / 8 => now;
+
+            // 10% chance of generating slower note duration
+            if (randNoteDur < 10){
+                beat / 2 => now;
+            } else {
+                beat / 8 => now;
+            }
         }
     } 
 }
@@ -107,14 +120,15 @@ if rand >= 80 && rand < 90: position 11
 
 while (true)   // change the 5 in a < 5 to simulate more/less loops
 {
-    0 => int x;
-    0 => int pos;
+    0 => int x;     // Var for turning on/off gain
+    0 => int pos;   // Var for randomizing starting position
 
     // Picking a random num between 1 and 100: major/minor decision
-    Math.random2(1, 100) => int rand;
+    Math.random2f(1, 100) => float rand;
     // Picking a random num between 1 and 90: starting position (chord) decision
-    Math.random2(1, 90) => int rand2;
-
+    Math.random2f(1, 90) => float rand2;
+    // Random number between 0 and 1 that will determine gain value
+    Math.random2f(0, 1) => float rand3;
 
 
     // Figuring out starting position (chord for arpeggio)
@@ -144,6 +158,11 @@ while (true)   // change the 5 in a < 5 to simulate more/less loops
         12 => pos;
     }
 
+    
+    // Mess around with panning
+    rand3 => pan1.pan;
+    rand3 => pan2.pan;
+    <<<"Rand3: ", rand3, "pan value">>>;
 
 
     // 70% chance of a major chord
@@ -151,19 +170,10 @@ while (true)   // change the 5 in a < 5 to simulate more/less loops
     {
         <<<"Rand: ", rand, "Major chord picked">>>;
         <<<"Rand2: ", rand2, "Position: ", pos>>>;
-        // Mess around with panning/gain
-        rand % 2 => int result;
-        if (result == 1) { 
-            1 => x;
-        } else if (result == 2) {
-            2 => x;
-        }
-
+        <<<"-------------------------------------">>>;
         // Call the playTwoBars function
-        // FUTURE IMPLEMENTATION: PASS X AS A PARAM AND CHANGE GAIN/PAN/OTHER ELEMENT
         playTwoBars(pos, major);
     }
-
 
 
     // 30% chance of a minor chord
@@ -171,6 +181,7 @@ while (true)   // change the 5 in a < 5 to simulate more/less loops
     {
         <<<"Rand: ", rand, "Minor chord picked">>>;
         <<<"Rand2: ", rand2, "Position: ", pos>>>;
+        <<<"-------------------------------------">>>;
         // Call the playTwoBars function
         playTwoBars(pos, minor);
     }
