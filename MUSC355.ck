@@ -82,6 +82,9 @@ fun void playTwoBars(int position, int chord[])
             // 10% chance of generating slower note duration
             if (randNoteDur < 10){
                 beat / 2 => now;
+                <<<"Slow note sequence generated">>>;
+                <<<"-------------------------------------">>>;
+
             } else {
                 beat / 8 => now;
             }
