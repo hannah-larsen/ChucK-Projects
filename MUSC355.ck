@@ -50,7 +50,6 @@ int position;           // what location our chord starts on (changes pitch)
 // Params for delay
 // need to define these otherwise the chuck memory cannot
 // hold onto space in memory for the delay
-//**NEED TO MOVE THESE TO WHILE(TRUE) SO I CAN CHANGE GAIN VALS TO FADE IN/OUT SOUND AT RANDOM PROBS**
 beat => delay2.max;
 beat/4 => delay2.delay;
 0.5 => delay2.gain;
