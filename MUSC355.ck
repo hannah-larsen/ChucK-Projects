@@ -10,10 +10,12 @@ CURRENT PROGRESS:
 - PROBABILISTIC PLAYING OF SOUNDS
     - Markov chain: out of 100, if a number is between 50-100 (50% chance) play sound
 - RANZOMIZED BEAT CHANGES 
+- randomized mutes (they dont sound good tho)
 
 NEXT UP:
-- Random mutes (gain = 0)
-- Implement back track (ambient sounds) that could be triggered - figure out how to import wav file
+
+- Implement back track - ***might do this in reaper instead***
+
  */
 
 
@@ -24,45 +26,6 @@ SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
 SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac;
 env2 => Delay delay2 => dac;
 delay2 => delay2;
-
-// // Defining sound files
-
-// SndBuf pos1 => dac;
-// SndBuf pos2 => dac;
-// SndBuf pos3 => dac;
-// SndBuf pos4 => dac;
-// SndBuf pos5 => dac;
-// SndBuf pos6 => dac;
-// SndBuf pos7 => dac;
-// SndBuf pos8 => dac;
-// SndBuf pos9 => dac;
-// SndBuf pos10 => dac;
-// SndBuf pos11 => dac;
-// SndBuf pos12 => dac;
-// me.dir() + "pos1.wav" => string filename;
-// me.dir() + "pos2.wav" => string filename;
-// me.dir() + "pos3.wav" => string filename;
-// me.dir() + "pos4.wav" => string filename;
-// me.dir() + "pos5.wav" => string filename;
-// me.dir() + "pos6.wav" => string filename;
-// me.dir() + "pos7.wav" => string filename;
-// me.dir() + "pos8.wav" => string filename;
-// me.dir() + "pos9.wav" => string filename;
-// me.dir() + "pos10.wav" => string filename;
-// me.dir() + "pos11.wav" => string filename;
-// me.dir() + "pos12.wav" => string filename;
-// filename => pos1.read;
-// filename => pos2.read;
-// filename => pos3.read;
-// filename => pos4.read;
-// filename => pos5.read;
-// filename => pos6.read;
-// filename => pos7.read;
-// filename => pos1.read;
-// filename => pos1.read;
-// filename => pos1.read;
-// filename => pos1.read;
-// filename => pos1.read;
 
 // Params for oscs
 0.2 => osc.gain;
@@ -111,6 +74,7 @@ fun void playTwoBars(int position, int chord[])
         1 => env1.keyOn;    // This allows us to hear the env1 ASDR
 
         // Generating a random value that will determine duration of final note in 4-chord sequence
+        // We will also re-use this variable for sampling probability later
         Math.random2f (1, 100) => float randNoteDur;
 
         for (0 => int j; j < 4; j++)    // This for loop gives us sound for our osc2
