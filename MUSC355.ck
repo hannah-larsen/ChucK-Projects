@@ -23,15 +23,15 @@ NEXT UP:
 
 // Defining our oscillators
 // REMOVE "WvOut waveOut => blackhole;" after each dac output to prevent recording
-SinOsc osc => ADSR env1 => Pan2 pan1 => dac => WvOut waveOut => blackhole;
-SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac => WvOut waveOut2 => blackhole;
-env2 => Delay delay2 => dac => WvOut waveOut3 => blackhole;
+SinOsc osc => ADSR env1 => Pan2 pan1 => dac; //=> WvOut waveOut => blackhole;
+SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac; //=> WvOut waveOut2 => blackhole;
+env2 => Delay delay2 => dac; //=> WvOut waveOut3 => blackhole;
 delay2 => delay2;
 
 // REMOVE these three lines in addition to above to prevent recording
-"chucksong.wav" => waveOut.wavFilename;
-"chucksong.wav" => waveOut2.wavFilename;
-"chucksong.wav" => waveOut3.wavFilename;
+// "chucksong.wav" => waveOut.wavFilename;
+// "chucksong.wav" => waveOut2.wavFilename;
+// "chucksong.wav" => waveOut3.wavFilename;
 
 // Params for oscs
 0.2 => osc.gain;
