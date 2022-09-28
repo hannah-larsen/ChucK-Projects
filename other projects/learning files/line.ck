@@ -1,6 +1,6 @@
 /* Basic program demonstrating how frequencies work in ChucK and outputting the sound */
 <<<"Testing for Chuck">>>;
-
+~
 TriOsc osc => dac;
 0.25 => osc.gain;
 

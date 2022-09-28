@@ -4,7 +4,7 @@ MUSC 355 CHUCK COMPOSITION
 
 CURRENT PROGRESS:
 - Created basic chords using frequencies and midi notes
-- Optimized runtime by creating loops to run our musical output
+- Optimized runtime by creating loops to run our musical output 
 - Experiemented with adding multiple oscillators
 - Added reverb and delay
 - PROBABILISTIC PLAYING OF SOUNDS
@@ -12,17 +12,13 @@ CURRENT PROGRESS:
 - RANZOMIZED BEAT CHANGES 
 - randomized mutes (they dont sound good tho)
 
-NEXT UP:
-
-- Implement back track - ***might do this in reaper instead***
-
- */
-
-
 /*  This is where we define all the things for use later on in the program */
+
+
 
 // Defining our oscillators
 // REMOVE "WvOut waveOut => blackhole;" after each dac output to prevent recording
+<<<<<<< HEAD
 SinOsc osc => ADSR env1 => Pan2 pan1 => dac; //=> WvOut waveOut => blackhole;
 SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac; //=> WvOut waveOut2 => blackhole;
 env2 => Delay delay2 => dac; //=> WvOut waveOut3 => blackhole;
@@ -33,6 +29,13 @@ delay2 => delay2;
 // "chucksong.wav" => waveOut2.wavFilename;
 // "chucksong.wav" => waveOut3.wavFilename;
 
+=======
+SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
+SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac;
+env2 => Delay delay2 => dac;
+delay2 => delay2;
+
+>>>>>>> 2653be497fbc45c400d625e35f05e6da0e7215e8
 // Params for oscs
 0.2 => osc.gain;
 0.1 => osc2.gain;
@@ -70,8 +73,7 @@ beat/4 => delay2.delay;
 // Creating a function that will play a chord and background osc
 // given a position for the chord to start on and a chord type (maj/min)
 fun void playTwoBars(int position, int chord[])
-{
-    
+{ 
 
    for (0 => int i; i < 4; i++) // This repeats 4 times, 1 time for each note in the chord. Gives us sound for osc1
     {
@@ -92,7 +94,6 @@ fun void playTwoBars(int position, int chord[])
                 beat / 2 => now;
                 <<<"Slow note sequence generated">>>;
                 <<<"-------------------------------------">>>;
-
             } else {
                 beat / 8 => now;
             }
