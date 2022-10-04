@@ -21,15 +21,44 @@ video 24/25 Clint Hoagland
 
 */
 
-// Defining oscillators and their paths
-// CHANGING THIS TO A CHUBGRAPH TO HAVE MULTIPLE FILTERS IN ONE ORGANIZED SPOT (video 24)
-class chubGraphTest extends Chubgraph{
-    //this is the chubgraph code in here
-    input => LPF lpf => output
+// Using a ChubGraph to organize all our starter/initializer code
+class LowpassDelay extends Chugraph{
+    inlet => LPF lpf => Delay delay => outlet;
+    1::second => delay.max;
+    0.5 => delay.gain;
     0.5 => lpf.freq;
+    1::second/2 => delay.delay;
+    delay => delay;
+    lpf => outlet;
 }
 
-offset => int 48;
+// Defining our oscillators and setting preset params
+// Chubgraphs are mono-processors so to make it stereo, create 2 chubgraphs in array
+SinOsc osc => LowpassDelay graph[2] => dac;
+0.5 => osc.gain;
+220 => osc.freq;
+
+1::second/4 => graph[1].delay.delay;
+
+// Setting our offset so it won't be extremely high/low (this is the pitch we start on)
+48 => int offset;
+
+//Defining what it means to be certain chords (for use later in function)
+[0,4,7,12] @=> int major[];
+[0,3,7,12] @=> int minor[];
+[0,3,6,12] @=> int dim[];
+[0,4,8,12] @=> int aug[];
+
+1 => int position;
+
+while(true){
+    for (0 => int i; i < 4; i++) // This repeats 4 times, 1 time for each note in the chord. Gives us sound for osc1
+    {
+        Std.mtof(major[0] + offset + position) => osc.freq;
+        1 => osc.keyOn;
+    }
+}
+
 
 
 /*
@@ -45,10 +74,6 @@ delay2 => delay2;
 0.8 => pan2.pan;
 
 // Defining what 'notes' makes a major vs minor chord, send them to a list
-[0,4,7,12] @=> int major[];
-[0,3,7,12] @=> int minor[];
-[0,3,6,12] @=> int dim[];
-[0,4,8,12] @=> int aug[];
 
 // Some starting positions/params
 48 => int offset;       // how far out is our starting pitch
