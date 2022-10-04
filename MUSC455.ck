@@ -5,63 +5,24 @@ MUSC 455 2022-23
 Created by: Hannah Larsen
 Inspired by: Clint Hoagland
 
-Ideas:
-- create different types of chords as list values
-- play chords solid/arpeggiated at random
-- have background ambient sounds randomly triggered by different events (have multiple sounds to pick)
-- play around with volume
 
--> this piece should be generative which means it will keep going until the user prompts its end position.
-try and make the number seeding random this time
+Progress:
+have function working right now that plays chords based on their types and starting values
+have 2 oscs working atm:
+    - first one is the melody - plays the arpeggiated notes based on chord type
+    - second one acts as the background (more echoey and distant)
 
+Goals:
+want to have some sort of live aspect, whether this be directly coding the params in the terminal or pre-setting what i want it to transition to
 
-video 24/25 Clint Hoagland
-*potential for adding live coding using shreds in the miniaudicle using chubgraphs (large ugen)
+the playTypeChord function takes the chord type and position as params
+but i want to eventually add more params like adjusting the gain/pan/rev/etc... and passing these values into the function
+    - could try overloading function and have multiple instances where not all params are necessary to input and some values could just be
+    defualted if not specified otherwise
 
-
+maybe include some sort of ambient backtrack that could change based on diff triggers in randomized sequences (?)
 */
 
-// Using a ChubGraph to organize all our starter/initializer code
-class LowpassDelay extends Chugraph{
-    inlet => LPF lpf => Delay delay => outlet;
-    1::second => delay.max;
-    0.5 => delay.gain;
-    0.5 => lpf.freq;
-    1::second/2 => delay.delay;
-    delay => delay;
-    lpf => outlet;
-}
-
-// Defining our oscillators and setting preset params
-// Chubgraphs are mono-processors so to make it stereo, create 2 chubgraphs in array
-SinOsc osc => LowpassDelay graph[2] => dac;
-0.5 => osc.gain;
-220 => osc.freq;
-
-1::second/4 => graph[1].delay.delay;
-
-// Setting our offset so it won't be extremely high/low (this is the pitch we start on)
-48 => int offset;
-
-//Defining what it means to be certain chords (for use later in function)
-[0,4,7,12] @=> int major[];
-[0,3,7,12] @=> int minor[];
-[0,3,6,12] @=> int dim[];
-[0,4,8,12] @=> int aug[];
-
-1 => int position;
-
-while(true){
-    for (0 => int i; i < 4; i++) // This repeats 4 times, 1 time for each note in the chord. Gives us sound for osc1
-    {
-        Std.mtof(major[0] + offset + position) => osc.freq;
-        1 => osc.keyOn;
-    }
-}
-
-
-
-/*
 SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
 SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac;
 env2 => Delay delay2 => dac;
@@ -95,13 +56,31 @@ beat/4 => delay2.delay;
 // Params for reverb
 0.2 => rev2.mix;
 
+//Defining what it means to be certain chords (for use later in function)
+[0,4,7,12] @=> int major[];
+[0,3,7,12] @=> int minor[];
+[0,3,6,12] @=> int dim[];
+[0,4,8,12] @=> int aug[];
+
+// Function takes in position (starting freq) and type of chord and plays both oscillators
+// first osc is like an arpeggio (acts as the melody)
+// second osc is a background echo-y osc that adds depth & is slightly delayed
 fun void playTypeChord (int position, int chord[]){
     for (0 => int i; i < 4; i++){
         Std.mtof(chord[0] + offset + position) => osc.freq;
         1 => env1.keyOn;    // This allows us to hear the env1 ASDR
         beat / 2 => now;
+
+        for (0 => int j; j < 4; j++)    // This for loop gives us sound for our osc2
+        {
+            Std.mtof(chord[j] + offset + position) => osc2.freq;   // Moving it up by 12 because thats 1 octave to sound diff
+            1 => env2.keyOn;
+        }
     }
 }
 
-playTypeChord(offset-20, major);
-*/
+// could do live coding with these?
+playTypeChord(1, major);
+playTypeChord(2, major);
+playTypeChord(1, major);
+playTypeChord(-5, major);
