@@ -12,11 +12,27 @@ Ideas:
 - play around with volume
 
 -> this piece should be generative which means it will keep going until the user prompts its end position.
-   try and make the number seeding random this time
+try and make the number seeding random this time
+
+
+video 24/25 Clint Hoagland
+*potential for adding live coding using shreds in the miniaudicle using chubgraphs (large ugen)
+
 
 */
 
 // Defining oscillators and their paths
+// CHANGING THIS TO A CHUBGRAPH TO HAVE MULTIPLE FILTERS IN ONE ORGANIZED SPOT (video 24)
+class chubGraphTest extends Chubgraph{
+    //this is the chubgraph code in here
+    input => LPF lpf => output
+    0.5 => lpf.freq;
+}
+
+offset => int 48;
+
+
+/*
 SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
 SinOsc osc2 => ADSR env2 => NRev rev2 => Pan2 pan2 => dac;
 env2 => Delay delay2 => dac;
@@ -61,3 +77,6 @@ fun void playTypeChord (int position, int chord[]){
         beat / 2 => now;
     }
 }
+
+playTypeChord(offset-20, major);
+*/
