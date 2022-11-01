@@ -1,0 +1,12 @@
+Things I want to be able to manipulate:
+- Chord type
+- Osc type
+- 
+
+
+To do:
+- call 'sporks' to have predefined params for changing every cycle
+(have a clock function and trigger after 1 bar of notes)
+
+have a while true loop and break when trigger number is typed
+other numbers will be associated with certain sporks

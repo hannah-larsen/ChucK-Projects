@@ -21,6 +21,9 @@ but i want to eventually add more params like adjusting the gain/pan/rev/etc... 
     defualted if not specified otherwise
 
 maybe include some sort of ambient backtrack that could change based on diff triggers in randomized sequences (?)
+
+*USE MINIAUDICLE FOR LIVE CODING - DO BASE PRPGRAMMING IN VSCODE AND TRANSFER STUFF**
+
 */
 
 SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
@@ -80,6 +83,7 @@ fun void playTypeChord (int position, int chord[]){
 }
 
 // could do live coding with these?
+// ignore this and figure out sequence of shreds i want in miniaudicle and call accordingly ****
 playTypeChord(1, major);
 playTypeChord(2, major);
 playTypeChord(1, major);
