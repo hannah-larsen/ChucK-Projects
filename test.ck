@@ -58,7 +58,7 @@ beat/4 => delay3.delay;
 [0,3,6,12] @=> int dim[];
 [0,4,8,12] @=> int aug[];
 
-0 => int choice;    // random choice number for generating music
+//0 => int choice;    // random choice number for generating music
 0 => int chord;     // type of chord played at position
 2 => int speed;     // how fast the notes are played
 
@@ -90,9 +90,9 @@ fun void PlayChoice (int choice, int chord[]){
         // This for loop creates the 'background' loop that is softer in dynamics and texture
         // osc3 is responsible for the background noises, which is why we only call that osc here
         for (0 => int j; j < 4; j++){  
-            Std.mtof(chord[j] + offset + position - 12) => osc3.freq;   
+            Std.mtof(chord[j] + offset + position - 7) => osc3.freq;   
             1 => env3.keyOn;
-            beat / 8 => now;
+            beat / 4 => now;
         } 
     }
 }
@@ -101,7 +101,34 @@ fun void PlayChoice (int choice, int chord[]){
 // The sounds will keep being randomly generated until the user stops the program (infinite loop until terminated)
 while(true){
 
-    1 => int choice;    // CHANGE LATER FOR RANDOM NUM GENERATION
+    //Generates a random number between (min, max) i.e. number of different choice branches
+    Math.random2(1,3) => int choice;
+    Math.random2(1,4) => int chordType;
+    
+    /*
+    POTENTIAL TO ADD DIFFERENT RANDOMIZED PARAMS HERE FOR
+    - SPEED
+    - GAIN
+    - REVERB
+    - PAN
+    
+    THESE WOULD ALL REQUIRE SEPARATE RANDOM NUM GENERATIONS, VARIABLES, AND PASSING THEM INTO THE FUNCTION
+    (WHICH THESE VARS WOULD ALSO NEED TO BE ADDED IN THE PlayChoice FUNC DEFINITION)
+    */
 
-    PlayChoice(choice, major);  //manually change chord type here or have a random gen and variable alias
+    // If tree assigns the chord type based on random num selection
+    // CAN IMPLEMENT MARKOV CHAIN ASPECT IF I WANT TO BROADEN THE RANGE OF NUMBERS IN FUTURE    
+    if (chordType == 1){
+        <<<"Fork", choice, "was picked. Major chord was picked.">>>;
+        PlayChoice(choice, major);
+    } else if (chordType == 2){
+        <<<"Fork", choice, "was picked. Minor chord was picked.">>>;
+        PlayChoice(choice, minor);
+    } else if (chordType == 3){
+        <<<"Fork", choice, "was picked. Augmented chord was picked.">>>;
+        PlayChoice(choice, aug);
+    } else {
+        <<<"Fork", choice, "was picked. Diminished chord was picked.">>>;
+        PlayChoice(choice, dim);
+    }
 }
