@@ -68,6 +68,7 @@ fun void PlayChoice (int choice, int chord[]){
     // once the loop is done, we go back to the top of the while and choose new params
     for (0 => int h; h < 4; h++){
         
+        // right now its doing the big note sequence thing for choice 1, but only doing the background stuff for choices 2/3 because of the way the for loop is laid out
         if (choice ==  1) {
             // list of numerical scale degrees that will be played
             [1, 3, 4, 5, 6, 5, 4, 3] @=> int noteSequence[]; 
@@ -93,7 +94,26 @@ fun void PlayChoice (int choice, int chord[]){
             Std.mtof(chord[j] + offset + position - 7) => osc3.freq;   
             1 => env3.keyOn;
             beat / 4 => now;
+        }
+
+        // have a slower option for choices 4/5 to pivot to
+        if (choice == 4) {
+            for (0 => int j; j < 4; j++){ 
+            Std.mtof(chord[j] + offset + position - 7) => osc3.freq;   
+            1 => env3.keyOn;
+            beat / 1 => now;
+            }
         } 
+
+        if (choice == 5) {
+            for (0 => int j; j < 4; j++){ 
+                Std.mtof(offset + position +11) => osc.freq;
+                1 => env1.keyOn;
+                Std.mtof(offset + position + 8) => osc2.freq;
+                2 => env2.keyOn;
+                beat / 16 => now;
+            }
+        }
     }
 }
 
@@ -102,7 +122,9 @@ fun void PlayChoice (int choice, int chord[]){
 while(true){
 
     //Generates a random number between (min, max) i.e. number of different choice branches
-    Math.random2(1,3) => int choice;
+    // THIS CAN BE MANUALLY CHANGED BY USER BY TYPING IN AN INTEGER FOR CHOICE INSTEAD OF CHOOSING IT RANDOMLY
+    // random:      Math.random2(1,5)
+    5 => int choice;
     Math.random2(1,4) => int chordType;
     
     /*
