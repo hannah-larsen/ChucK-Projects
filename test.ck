@@ -20,11 +20,11 @@ basic synth and find a sound pattern to duplicate
 - backtrack (ambient audio) that matches vibe of piece
 */
 
-SndBuf crows => dac;    // ambient background wav file
+//SndBuf crows => dac;    // ambient background wav file
 SinOsc osc => ADSR env1 => Pan2 pan1 => dac;    // osc1: for if statements
 SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;   // osc2: supporting osc for if statements
 SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac;  // osc3: background osc (plays throughout)
-env3 => Delay delay3 => dac;
+env3 => Delay delay3 => SndBuf crows => dac;
 delay3 => delay3;
 
 //SndBuf Stuff
