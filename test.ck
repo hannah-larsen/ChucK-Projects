@@ -20,11 +20,18 @@ basic synth and find a sound pattern to duplicate
 - backtrack (ambient audio) that matches vibe of piece
 */
 
+SndBuf crows => dac;    // ambient background wav file
 SinOsc osc => ADSR env1 => Pan2 pan1 => dac;    // osc1: for if statements
 SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;   // osc2: supporting osc for if statements
 SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac;  // osc3: background osc (plays throughout)
 env3 => Delay delay3 => dac;
 delay3 => delay3;
+
+//SndBuf Stuff
+me.dir() + "crows-edited.wav" => string filename;
+filename => crows.read;
+crows.samples() => crows.pos;
+0 => crows.pos;
 
 // Params for oscs (gain/pan)
 0.2 => osc.gain;
@@ -66,11 +73,23 @@ fun void PlayChoice (int choice, int chord[]){
     // This for loop is responsible for the 'melody' of the piece (the louder more prominent notes)
     // h can only go up to 4 which will give us 4 rotations of 1 type of chord before switching to the next one
     // once the loop is done, we go back to the top of the while and choose new params
-    for (0 => int h; h < 4; h++){
+    
+    //crows.length() => now;    //NEED TO GET THIS WORKING IN PARALLEL WITH OTHER STUFF
+
+    for (0 => int h; h < 1; h++){
         
         // right now its doing the big note sequence thing for choice 1, but only doing the background stuff for choices 2/3 because of the way the for loop is laid out
         if (choice ==  1) {
             // list of numerical scale degrees that will be played
+            /*
+            these are the following note sequence changes
+            (each list will have 8 elements)
+            [2,4,6,8,7,6,5,4]
+            [1,2,3,4,5,6,7,8]
+            [1,8,6,4,5,2,3,4]
+            [1,3,5,7,8,6,4,2]
+            [3,5,7,6,8,4,6,3]
+            */
             [1, 3, 4, 5, 6, 5, 4, 3] @=> int noteSequence[]; 
 
             // for loop executes 8 times, 1 time for each note, 8 note sequence
@@ -84,7 +103,7 @@ fun void PlayChoice (int choice, int chord[]){
                 1 => env1.keyOn;
                 Std.mtof(offset + noteSequence[i] +18) => osc2.freq;
                 2 => env2.keyOn;
-                beat / 8 => now;
+                beat / 4 => now;
             }
         }
 
@@ -124,8 +143,8 @@ while(true){
     //Generates a random number between (min, max) i.e. number of different choice branches
     // THIS CAN BE MANUALLY CHANGED BY USER BY TYPING IN AN INTEGER FOR CHOICE INSTEAD OF CHOOSING IT RANDOMLY
     // random:      Math.random2(1,5)
-    5 => int choice;
-    Math.random2(1,4) => int chordType;
+    1 => int choice;
+    1 => int chordType;
     
     /*
     POTENTIAL TO ADD DIFFERENT RANDOMIZED PARAMS HERE FOR
