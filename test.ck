@@ -9,29 +9,28 @@ will switch to and assume the new parameters to change the aural components of t
 This program was created by Hannah Larsen
 Inspired by Clint Hoagland 
 
-
-
-TO DO:
-- figure out some sort of melodic stuff so that it doesnt sound as bad: play around in reaper with
-basic synth and find a sound pattern to duplicate
-- add another osc that can be muted and unmuted as needed
-- add audio file for a beat (simple snare or something idk)
-- either get a clock working or be ready to add shreds perfectly on queue
-- backtrack (ambient audio) that matches vibe of piece
+NEXT STEPS:
+- Get audio file working in MiniAudicle (right now it only plays in VsCode)
+- Add multiple ambient audio wav files to be triggered at different times
+- 
 */
 
-//SndBuf crows => dac;    // ambient background wav file
-SinOsc osc => ADSR env1 => Pan2 pan1 => dac;    // osc1: for if statements
-SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;   // osc2: supporting osc for if statements
+SinOsc osc => ADSR env1 => Pan2 pan1 => dac;                // osc1: for if statements
+SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;               // osc2: supporting osc for if statements
 SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac;  // osc3: background osc (plays throughout)
-env3 => Delay delay3 => SndBuf crows => dac;
+env3 => Delay delay3 => SndBuf soundFile => dac;            // all SndBuf files will have to pass some sort of delay env to be able to play
 delay3 => delay3;
 
-//SndBuf Stuff
+/*
+SndBuf Stuff
+Here are a list of other audio file names to be pulled (live performance):
+--- crows-edited.wav
+Copy+Paste these filenames into the quotations on the next line to trigger
+*/
 me.dir() + "crows-edited.wav" => string filename;
-filename => crows.read;
-crows.samples() => crows.pos;
-0 => crows.pos;
+filename => soundFile.read;
+soundFile.samples() => soundFile.pos;
+0 => soundFile.pos;
 
 // Params for oscs (gain/pan)
 0.2 => osc.gain;
@@ -74,7 +73,7 @@ fun void PlayChoice (int choice, int chord[]){
     // h can only go up to 4 which will give us 4 rotations of 1 type of chord before switching to the next one
     // once the loop is done, we go back to the top of the while and choose new params
     
-    //crows.length() => now;    //NEED TO GET THIS WORKING IN PARALLEL WITH OTHER STUFF
+    //soundFile.length() => now;    //NEED TO GET THIS WORKING IN PARALLEL WITH OTHER STUFF
 
     for (0 => int h; h < 1; h++){
         
@@ -84,13 +83,14 @@ fun void PlayChoice (int choice, int chord[]){
             /*
             these are the following note sequence changes
             (each list will have 8 elements)
+            [1,3,4,5,6,5,4,3]
             [2,4,6,8,7,6,5,4]
             [1,2,3,4,5,6,7,8]
             [1,8,6,4,5,2,3,4]
             [1,3,5,7,8,6,4,2]
             [3,5,7,6,8,4,6,3]
             */
-            [1, 3, 4, 5, 6, 5, 4, 3] @=> int noteSequence[]; 
+            [2,4,6,8,7,6,5,4] @=> int noteSequence[]; 
 
             // for loop executes 8 times, 1 time for each note, 8 note sequence
             for(0 => int i; i < 8; i++){
@@ -143,20 +143,9 @@ while(true){
     //Generates a random number between (min, max) i.e. number of different choice branches
     // THIS CAN BE MANUALLY CHANGED BY USER BY TYPING IN AN INTEGER FOR CHOICE INSTEAD OF CHOOSING IT RANDOMLY
     // random:      Math.random2(1,5)
-    1 => int choice;
-    1 => int chordType;
+    Math.random2(1,5) => int choice;
+    Math.random2(1,4) => int chordType;
     
-    /*
-    POTENTIAL TO ADD DIFFERENT RANDOMIZED PARAMS HERE FOR
-    - SPEED
-    - GAIN
-    - REVERB
-    - PAN
-    
-    THESE WOULD ALL REQUIRE SEPARATE RANDOM NUM GENERATIONS, VARIABLES, AND PASSING THEM INTO THE FUNCTION
-    (WHICH THESE VARS WOULD ALSO NEED TO BE ADDED IN THE PlayChoice FUNC DEFINITION)
-    */
-
     // If tree assigns the chord type based on random num selection
     // CAN IMPLEMENT MARKOV CHAIN ASPECT IF I WANT TO BROADEN THE RANGE OF NUMBERS IN FUTURE    
     if (chordType == 1){
