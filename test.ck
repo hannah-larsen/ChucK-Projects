@@ -1,33 +1,43 @@
 /*
+NOTES:
+
 This program is going to be what gets inserted into the MiniAudicle
 and gets played live. In this program, there are initialized parameters that
 define the starting state of the oscillators and their features.
 
-Further down, there are various methods with new preset values that the program 
-will switch to and assume the new parameters to change the aural components of the piece.
+In the latter half of this program, there are helper functions that provoke
+certain preset actions given specific parameters - this also aids in the 
+live creation process.
 
-This program was created by Hannah Larsen
-Inspired by Clint Hoagland 
+This program was created by Hannah Larsen for MUSC 455
+Inspired by Clint Hoagland (YouTube via Clint Hoagland)
 
-
-
-TO DO:
-- figure out some sort of melodic stuff so that it doesnt sound as bad: play around in reaper with
-basic synth and find a sound pattern to duplicate
-- add another osc that can be muted and unmuted as needed
-- add audio file for a beat (simple snare or something idk)
-- either get a clock working or be ready to add shreds perfectly on queue
-- backtrack (ambient audio) that matches vibe of piece
+THIS PROGRAM IS NOT COMPLETE, BUT MORESO AN EXPERIEMENTAL PROTOTYPE TO
+DEMONSTRATE THE USE OF LIVECODING IN CHUCK.
 */
 
-//SndBuf crows => dac;    // ambient background wav file
-SinOsc osc => ADSR env1 => Pan2 pan1 => dac;    // osc1: for if statements
-SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;   // osc2: supporting osc for if statements
-SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac;  // osc3: background osc (plays throughout)
+
+
+/*
+SndBuf (Sound Buffer)
+This section initializes all the values for the Sound Buffers including, but not limited to:
+
+Type of oscillator (sin/tri/sqr), envelope it will be utilizing (envX), panning amount (panX), reverb (revX)
+delay (delayX), and dac (which is what the sound gets outputted to -> Digital Audio Converter)
+*/
+
+// SndBuf crows => dac;    // ambient background wav file -> ununsed in MiniAudicle livecoding
+// osc1: for if statements
+SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
+// osc2: supporting osc for if statements               
+SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;
+// osc3: background osc (plays throughout)               
+SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac; 
+// env/delay -> chaining various fx 
 env3 => Delay delay3 => SndBuf crows => dac;
 delay3 => delay3;
 
-//SndBuf Stuff
+// Initializing for reading from a local wav file (this os unused in the livecoding)
 me.dir() + "crows-edited.wav" => string filename;
 filename => crows.read;
 crows.samples() => crows.pos;
@@ -38,25 +48,35 @@ crows.samples() => crows.pos;
 0.2 => osc2.gain;
 0.15 => osc3.gain;
 
-// Some starting positions/params
-48 => int offset;       // how far out is our starting pitch
-int position;           // what location our chord starts on (changes pitch)
-1::second => dur beat;  // defining our 'beat' which will allow noise to output
 
-// Params for ADSR envs
-// att   decay  sus  rel
+/*
+Paramater setting:
+This section initializes more parameters, but instead of oscillator specific, it sets params
+for other variables we may find useful during the livecoding process.
+
+Offset is the initial starting pitch (this is set to ensure pitch is not too high or too low).
+Position is initialized as an int and will be used to indicate what scale degree we start on 
+        (e.g. starting on 1 indicates the tonic scale degree).
+Beat defines the pace at which the notes are played (1::second == quarter note)
+ADSR (attack, decay, sustain, release) and respective values for each param
+*/
+
+// General/MISC params
+48 => int offset;       
+int position;
+1::second => dur beat;
+
+// ADSR: (att, decay, sus, rel)
 (beat/2, beat/2, 0, 1::ms) => env1.set;
 (beat/2, beat/2, 0, 1::ms) => env2.set;
 (100::ms, beat/4, 0.5, 10::ms) => env3.set;
 
-// Params for delay
-// need to define these otherwise the chuck memory cannot
-// hold onto space in memory for the delay
+// Defining delay params so Chuck can allocate space accordingly
 beat => delay3.max;
 beat/4 => delay3.delay;
 0.5 => delay3.gain;
 
-// Params for reverb
+// Reverb
 0.2 => rev3.mix;
 
 //Defining what it means to be certain chords (for use later in function)
@@ -65,9 +85,27 @@ beat/4 => delay3.delay;
 [0,3,6,12] @=> int dim[];
 [0,4,8,12] @=> int aug[];
 
-//0 => int choice;    // random choice number for generating music
-0 => int chord;     // type of chord played at position
-2 => int speed;     // how fast the notes are played
+// choice: specific choice int will determine diff sequence triggered
+//0 => int choice;
+// chord: type of chord played at position (maj/min/ug/dim)
+0 => int chord;
+// speed: how fast notes are played
+2 => int speed;
+
+
+
+/*
+PlayChoice function:
+
+PlayChoice takes the choice and chord types as params and plays them in various 
+sequences as indicated by the user. Execution of function is provided within.
+TLDR: used for the louder melody notes. User will input a list of 8 scale degree values
+and program will output that note sequence.
+
+In the latter half of this function, various "choice" if statements are present and will
+get triggered when the user changes the choice integer value. These will differ the note values
+and speed depending on which one is picked.
+*/
 
 fun void PlayChoice (int choice, int chord[]){
     // This for loop is responsible for the 'melody' of the piece (the louder more prominent notes)
@@ -136,6 +174,12 @@ fun void PlayChoice (int choice, int chord[]){
     }
 }
 
+/*
+While True:
+
+This section implements the print statements that help the user test for which chord was picked.
+A print statement will execute every time a chord is picked.
+*/
 
 // The sounds will keep being randomly generated until the user stops the program (infinite loop until terminated)
 while(true){
@@ -146,19 +190,7 @@ while(true){
     1 => int choice;
     1 => int chordType;
     
-    /*
-    POTENTIAL TO ADD DIFFERENT RANDOMIZED PARAMS HERE FOR
-    - SPEED
-    - GAIN
-    - REVERB
-    - PAN
-    
-    THESE WOULD ALL REQUIRE SEPARATE RANDOM NUM GENERATIONS, VARIABLES, AND PASSING THEM INTO THE FUNCTION
-    (WHICH THESE VARS WOULD ALSO NEED TO BE ADDED IN THE PlayChoice FUNC DEFINITION)
-    */
-
     // If tree assigns the chord type based on random num selection
-    // CAN IMPLEMENT MARKOV CHAIN ASPECT IF I WANT TO BROADEN THE RANGE OF NUMBERS IN FUTURE    
     if (chordType == 1){
         <<<"Fork", choice, "was picked. Major chord was picked.">>>;
         PlayChoice(choice, major);
