@@ -17,13 +17,16 @@ DEMONSTRATE THE USE OF LIVECODING IN CHUCK.
 */
 
 //SndBuf crows => dac;    // ambient background wav file
-SinOsc osc => ADSR env1 => Pan2 pan1 => dac;    // osc1: for if statements
-SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;   // osc2: supporting osc for if statements
-SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac;  // osc3: background osc (plays throughout)
+// osc1: for if statements
+SinOsc osc => ADSR env1 => Pan2 pan1 => dac;
+// osc2: supporting osc for if statements    
+SinOsc osc2 => ADSR env2 => Pan2 pan2 => dac;
+// osc3: background osc (plays throughout)   
+SinOsc osc3 => ADSR env3 => NRev rev3 => Pan2 pan3 => dac;  
 env3 => Delay delay3 => SndBuf crows => dac;
 delay3 => delay3;
 
-//SndBuf Stuff
+// Ambient audio file (not used in livecoding, just for experimental purposes)
 me.dir() + "crows-edited.wav" => string filename;
 filename => soundFile.read;
 soundFile.samples() => soundFile.pos;
@@ -115,7 +118,7 @@ fun void PlayChoice (int choice, int chord[]){
             [1,3,5,7,8,6,4,2]
             [3,5,7,6,8,4,6,3]
             */
-            
+
             [2,4,6,8,7,6,5,4] @=> int noteSequence[]; 
 
             // for loop executes 8 times, 1 time for each note, 8 note sequence
@@ -177,17 +180,6 @@ while(true){
     // random:      Math.random2(1,5)
     1 => int choice;
     1 => int chordType;
-    
-    /*
-    POTENTIAL TO ADD DIFFERENT RANDOMIZED PARAMS HERE FOR
-    - SPEED
-    - GAIN
-    - REVERB
-    - PAN
-    
-    THESE WOULD ALL REQUIRE SEPARATE RANDOM NUM GENERATIONS, VARIABLES, AND PASSING THEM INTO THE FUNCTION
-    (WHICH THESE VARS WOULD ALSO NEED TO BE ADDED IN THE PlayChoice FUNC DEFINITION)
-    */
 
     // If tree assigns the chord type based on random num selection
     if (chordType == 1){
