@@ -2,7 +2,7 @@
 A collection of my small ChucK projects that I am currently working on.
 
 ## Language Background
-ChucK is a language developed by students at Princeton University based around the Java and C languages. 
+[ChucK](https://chuck.stanford.edu/) is a language developed by students at Stanford University based around the Java and C languages. 
 This language aims to combine traditional coding styles with music-based elements to generate audio.
 
 ## Installation
